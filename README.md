@@ -2,8 +2,7 @@
 
 This repository contains the code used for the experiments in the paper:
 
-**"Explaining Epidemic Sensitivity to Population Structure using
-Hypergraph Diagnostics."**
+**"Structural Sensitivity in Epidemic Agent-Based Models"**
 
 The repository implements a full pipeline for running structural
 sensitivity experiments in the STRIDE epidemic agent-based simulator,
@@ -17,6 +16,19 @@ The pipeline consists of three main stages:
 3.  Analysis -- generate plots and statistical summaries.
 
 # Overview of the Pipeline
+
+### Select an intervention plan
+
+Copy the desired intervention configuration to STRIDE's active configuration
+file. For example, to reproduce the general-intervention analysis:
+
+```bash
+cp data/PLAN2_mixed_intervention.xml config/run_default.xml
+```
+
+The five XML files in `data/` correspond to the five intervention regimes
+described in the paper. Repeat the simulation and processing pipeline for each
+plan when reproducing the cross-policy robustness analysis. 
 
 ## 1. Simulation
 
@@ -121,21 +133,41 @@ analysis.
 
 # STRIDE Simulator
 
-The STRIDE simulator is **not included in this repository for the
-double-blind submission**.
+The experiments use a modified version of the STRIDE COVID-19 simulator:
 
-STRIDE is a publicly available epidemic agent-based simulator. After the
-review process, the repository will be updated to include the correct
-link and integration instructions.
+https://github.com/NWils98/stride_covid19_v1
 
-Expected structure during reproduction:
+## Building STRIDE
 
-    project_root/
-        stride/
-        structural-sensitivity-repo/
-            simulation/
-            processing/
-            analysis/
+STRIDE requires CMake, a C++ compiler, and the Boost filesystem, thread,
+date-time, and system libraries.
+
+Clone and build the simulator as follows:
+
+```bash
+git clone https://github.com/NWils98/stride_covid19_v1.git
+cd stride_covid19_v1
+git checkout c0429a773e4515cc674fa721df614d53a94bff61
+
+cmake -S . -B build \
+  -DCMAKE_BUILD_TYPE=Release \
+  -DCMAKE_INSTALL_PREFIX=<absolute-path-to-hypergraph-epidemic-sensitivity>
+
+cmake --build build --parallel
+cmake --install build
+```
+
+Installing STRIDE directly into the structural-sensitivity repository creates
+the `bin/`, `config/`, and `data/` directories expected by
+`simulation/run_sensitivity_all.py`.
+
+After installation, extract the baseline and perturbed populations:
+
+```bash
+cd <absolute-path-to-hypergraph-epidemic-sensitivity>
+unzip data/pop_belgium600k_c500_teachers_censushh.zip -d data
+unzip data/Populations.zip -d data
+```
 
 ------------------------------------------------------------------------
 
