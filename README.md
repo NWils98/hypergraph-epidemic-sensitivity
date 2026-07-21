@@ -46,10 +46,7 @@ This script:
 -   computes intermediate diagnostics
 -   stores results as compressed archives
 
-The script expects the STRIDE simulator to be located in the parent
-directory of the repository:
-
-    ../stride
+The script expects STRIDE to be installed into this repository, with the executable at `bin/stride` and the active configuration at `config/run_default.xml`, as described below.
 
 The simulator produces daily agent state files that are processed by the
 pipeline.
